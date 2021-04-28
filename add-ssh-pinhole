@@ -1,1 +1,0 @@
-sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=22 destinationIPAddress=2a01:cb15:be:4200:8d6b:6e74:5f0f:8cc9 protocol=6 ipversion=6  id=SSH enable=true
