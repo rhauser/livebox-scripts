@@ -3,25 +3,30 @@
 usage()
 {
 cat <<EOF
-Usage: $0 <name> <port|service> <IPV6Address> [ tcp|udp ]
+Usage: $0 <port|service> [ <IPV6Address> [ name [ tcp|udp ] ] ]
 
 Example:
-  $0 home-ssh ssh 2a01:cb15:be:9999::1
+  $0 ssh
+  $0 https
+  $0 ssh 2a01:cb15:be:9999::1
+  $0 ssh 2a01:cb15:be:9999::1 my-ssh
+  $0 12345 2a01:cb15:be:9999::1 my-port udp
 EOF
 }
 
-[ $# -ge 3 ] || { usage; exit 1; }
+[ $# -ge 1 ] || { usage; exit 1; }
 
 protocol=${4:-tcp}
 
-name=$1
-service=$(getent services $2)
+service=$(getent services $1)
 if [ -z "${service}" ]
 then
-    port=$2
+    port=$1
 else
     read -r port protocol < <(echo $service | awk '{ print $2; }' | tr '/' ' ')
 fi
 protocol=$(getent protocols ${protocol} | awk '{ print $2; }')
+name=${3-$(hostname)-$1}
+addr=${2-$(/usr/sbin/ip -6 -oneline addr show mngtmpaddr | awk '{ print $4 }' | cut -d/ -f1)}
 
-sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=$port destinationIPAddress=$3 protocol=$protocol ipversion=6  id=$name enable=true persistent=true
+sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=$port destinationIPAddress=$addr protocol=$protocol ipversion=6  id=$name enable=true persistent=true
