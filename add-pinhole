@@ -24,4 +24,4 @@ else
 fi
 protocol=$(getent protocols ${protocol} | awk '{ print $2; }')
 
-sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=$port destinationIPAddress=$3 protocol=$protocol ipversion=6  id=$name enable=true
+sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=$port destinationIPAddress=$3 protocol=$protocol ipversion=6  id=$name enable=true persistent=true
