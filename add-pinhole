@@ -28,5 +28,8 @@ fi
 protocol=$(getent protocols ${protocol} | awk '{ print $2; }')
 name=${3-$(hostname)-$1}
 addr=${2-$(/usr/sbin/ip -6 -oneline addr show mngtmpaddr | awk '{ print $4 }' | cut -d/ -f1)}
+if [ "${addr}" = "auto" ]; then
+  addr=$(/usr/sbin/ip -6 -oneline addr show mngtmpaddr | awk '{ print $4 }' | cut -d/ -f1)
+fi
 
 sysbus Firewall:setPinhole origin=webui sourceInterface=data destinationPort=$port destinationIPAddress=$addr protocol=$protocol ipversion=6  id=$name enable=true persistent=true
