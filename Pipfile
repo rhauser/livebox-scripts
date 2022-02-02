@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 sysbus = "*"
+build = "*"
 
 [dev-packages]
 
