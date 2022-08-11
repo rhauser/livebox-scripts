@@ -3,7 +3,7 @@
 usage()
 {
 cat <<EOF
-Usage: $0 <port|service> [ <IPV6Address> [ name [ tcp|udp ] ] ]
+Usage: $0 [-h | --help ] <port|service> [ <IPV6Address> [ name [ tcp|udp ] ] ]
 
 Example:
   $0 ssh
@@ -15,6 +15,18 @@ EOF
 }
 
 [ $# -ge 1 ] || { usage; exit 1; }
+
+while [ $# -ge 1 ]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
 
 protocol=${4:-tcp}
 
